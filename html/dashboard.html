@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background-color: #ffffff; /* fond blanc général */
+        }
+
+        /* Sidebar */
+        #sidebar {
+            height: 100vh;
+            width: 230px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #2b2f32;
+            padding-top: 80px;
+            box-shadow: 3px 0 10px rgba(0,0,0,0.15);
+        }
+
+        #sidebar a {
+            color: #fff;
+            padding: 14px 20px;
+            display: block;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        #sidebar .nav-link:hover {
+            background: #57606f;
+            border-radius: 5px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Contenu principal */
+        #main {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        /* Cartes / sections principales */
+        #main > div.bg-white, .row > div.bg-white {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            padding: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* Boutons principaux bleus */
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .btn-primary:hover {
+            background-color: #0661d1;
+            border-color: #0661d1;
+        }
+
+        /* Titres bleus pour sections importantes */
+        h5.section-title {
+            color: #0d6efd;
+            font-weight: 600;
+        }
+
+        #name {
+            margin-top: 70px !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top px-3">
+        <span id="premsp" class="navbar-brand fw-bold" style="color: blue;">Tableau de bord</span>
+
+        <div class="ms-auto d-flex align-items-center">
+            <div id="role" style="margin-right: 12px;"></div>
+            <select id="select" class="form-select me-3" style="width:150px;">
+                <option value="French">French</option>
+                <option value="English">English</option>
+            </select>
+            <button class="btn btn-danger" id="deco">Se deconnecter</button>
+        </div>
+    </nav>
+
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+        <nav class="nav flex-column text-center">
+            <a class="nav-link" href="#">Tableau de bord</a>
+            <a class="nav-link" href="../html/Liste_livres.html">Livres</a>
+            <a class="nav-link" id="comma" href="../html/liste_comm_client.html">Commandes</a>
+        </nav>
+    </div>
+
+    <!-- CONTENU PRINCIPAL -->
+    <div id="main">
+
+        <!-- Welcome / User -->
+        <div id="name" class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
+        </div>
+
+        <!-- Add / List Books -->
+        <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
+            <a id="List" href="../html/Ajout._livre_admin.html"
+               class="btn btn-primary w-100" style="max-width:120px;">Ajouter livre</a>
+            <a href="../html/Liste_livres.html" class="btn btn-primary w-100" style="max-width:120px;">Lister livres</a>
+        </div>
+
+        <!-- Overview -->
+        <div class="mb-4 p-3 bg-white rounded shadow-sm">
+            <h5 class="mb-4 text-center section-title">Aperçu</h5>
+            <div class="row g-3 text-center">
+                <div class="col-md-4">
+                    <h5 class="section-title">Chiffre d'affaires total</h5>
+                    <p class="fs-4 fw-bold" id="TR">0</p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="section-title">Nombre des livres</h5>
+                    <p class="fs-4 fw-bold" id="NOB">0</p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="section-title">Croissance du chiffre d'affaires</h5>
+                    <p class="fs-4 fw-bold" id="RG">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row g-3">
+            <div class="col-md-6 bg-white rounded shadow-sm p-3">
+                <canvas id="dia1"></canvas>
+            </div>
+            <div class="col-md-6 bg-white rounded shadow-sm p-3">
+                <canvas id="dia2"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>

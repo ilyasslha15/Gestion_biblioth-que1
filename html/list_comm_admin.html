@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-fr="Commandes" data-en="Orders">Commandes</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+#sidebar {
+    height: 100vh;
+    width: 230px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #2b2f32;
+    padding-top: 80px;
+    box-shadow: 3px 0 10px rgba(0,0,0,0.25);
+    z-index: 1000;
+}
+
+#sidebar a {
+    color: #fff;
+    padding: 14px 20px;
+    display: block;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+#sidebar .nav-link:hover {
+    background: #57606f;
+    border-radius: 5px;
+}
+
+#main {
+    margin-left: 230px;
+    padding: 100px 30px 30px;
+    min-height: 100vh;
+}
+
+tr, td, th {
+    padding: 20px !important;
+}
+
+button {
+    margin: 10px;
+}
+button:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+</style>
+</head>
+<body class="bg-light">
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+    <nav class="nav flex-column text-center">
+        <a class="nav-link" href="../html/dashboard.html" data-fr="Tableau de bord" data-en="Dashboard">Tableau de bord</a>
+        <a class="nav-link" href="../html/Liste_livres.html" data-fr="Livres" data-en="Books">Livres</a>
+        <a class="nav-link" href="#" data-fr="Commandes" data-en="Orders">Commandes</a>
+    </nav>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top px-3">
+    <span class="navbar-brand fw-bold" data-fr="Commandes" data-en="Orders" style="color: blue;">Commandes</span>
+
+    <div class="ms-auto d-flex align-items-center">
+        <div id="role" style="margin-right: 12px;"></div>
+        <select id="langSelector" class="form-select w-auto me-3">
+            <option value="fr">FR</option>
+            <option value="en">EN</option>
+        </select>
+        <button class="btn btn-danger" id="deco" data-fr="Déconnexion" data-en="Logout">Déconnexion</button>
+    </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+    <div class="w-75 mx-auto">
+        <!-- FILTRAGE -->
+        <div class="card p-3 mb-3">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" id="searchTitle" class="form-control" placeholder="Client email">
+                    <p class="text-danger mt-2" id="error"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLEAU -->
+        <div id="liste" class="table-responsive shadow-sm rounded">
+            <table id="table2" class="table table-hover table-bordered text-center align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th data-fr="Client" data-en="Client" style="color:blue">Client</th>
+                        <th data-fr="Livre" data-en="Book" style="color:blue">Livre</th>
+                        <th data-fr="Prix" data-en="Price" style="color:blue">Prix</th>
+                        <th data-fr="Options" data-en="Export" style="color:blue">Export</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<script src="../js/list_comm_admin.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du livre</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* =======================
+           Sidebar
+           ======================= */
+        #sidebar {
+            height: 100vh;
+            width: 230px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #2b2f32; 
+            padding-top: 80px;
+            box-shadow: 3px 0 10px rgba(0,0,0,0.25);
+        }
+        #sidebar a {
+            color: #fff;
+            padding: 14px 20px;
+            display: block;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        #sidebar .nav-link:hover {
+            background: #57606f;
+            border-radius: 5px;
+        }
+
+        /* =======================
+           Contenu principal
+           ======================= */
+        #main {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        #pageContainer {
+            max-width: 650px;
+            margin: 50px auto;
+        }
+
+        .card {
+            border-radius: 12px;
+        }
+
+        .btn-space {
+            margin-right: 10px;
+        }
+    @media print {
+    body * {
+        visibility: hidden;
+    }
+    #show * {
+        visibility: visible;
+    }
+    #btn{
+        display: none;
+    }
+    #show {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <!-- =======================
+         Navbar
+         ======================= -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top px-3">
+        <span class="navbar-brand fw-bold">Tableau de bord</span>
+
+        <div class="ms-auto d-flex align-items-center">
+            <!-- Affichage rôle utilisateur -->
+           <div id="role" style="margin-right: 12px;"></div>
+            <!-- Sélecteur langue -->
+            <select id="select" class="form-select me-3" style="width:150px;">
+                <option value="English">English</option>
+                <option value="French">French</option>
+            </select>
+
+            <!-- Déconnexion -->
+            <button class="btn btn-danger" id="deco">Deconnexion</button>
+        </div>
+    </nav>
+
+    <!-- =======================
+         Sidebar
+         ======================= -->
+    <div id="sidebar">
+        <nav class="nav flex-column text-center">
+            <a class="nav-link" href="../html/dashboard.html">Dashboard</a>
+            <a class="nav-link" href="../html/Liste_livres.html">Livres</a>
+            <a class="nav-link" id="comma" href="../html/liste_comm_client.html">Commandes</a>
+        </nav>
+    </div>
+
+    <!-- =======================
+         Contenu principal
+         ======================= -->
+    <div id="main">
+        <div id="pageContainer">
+            <div id="show" class="card shadow p-4">
+           <div id="pdf">    <!-- Titre page -->
+                <h2 class="text-center mb-4" style="color: blue;">📘 Détails du livre</h2>
+
+                <!-- Informations du livre -->
+                <p><strong class="inf">Titre :</strong> <span id="det_title"></span></p>
+                <p><strong class="inf">Auteur :</strong> <span id="det_author"></span></p>
+                <p><strong class="inf">Année :</strong> <span id="det_year"></span></p>
+                <p><strong class="inf">Type :</strong> <span id="det_type"></span></p>
+                <p><strong class="inf">Prix :</strong> <span id="det_price"></span> DH</p>
+          </div>    
+                <hr>
+
+                <!-- Boutons actions -->
+                <div id="btn" class="d-flex justify-content-between mt-3">
+                    <button class="btn btn-secondary btn-space" id="btnPDF"  onclick="generatePDF()">Exporter PDF</button>
+                    <a id="btnEdit" class="btn btn-warning text-white" href="Modifier_livre.html">Modifier</a>
+                    <a href="Liste_livres.html" class="btn btn-primary">Retour</a>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="../js/details_livre.js"></script>
+</body>
+</html>

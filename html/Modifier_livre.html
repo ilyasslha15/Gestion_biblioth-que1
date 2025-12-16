@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modifier un livre</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    background-color: #ffffff;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* Conteneur central */
+#content {
+    max-width: 600px;
+    margin: 100px auto;
+}
+
+/* Formulaire style card */
+#bookForm {
+    background: #fff;
+    padding: 30px;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+/* Titres */
+h2#pageTitle {
+    color: #0d6efd;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Boutons */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: #0661d1;
+    border-color: #0661d1;
+}
+
+.text-danger {
+    font-size: 0.9em;
+}
+.text-success {
+    font-size: 0.95em;
+}
+</style>
+</head>
+
+<body>
+
+<div id="content">
+
+<h2 id="pageTitle">Modifier un livre</h2>
+
+<form id="bookForm">
+    <div class="mb-3">
+        <label for="title" class="form-label">Titre</label>
+        <input type="text" id="title" class="form-control">
+        <div class="text-danger" id="errTitle"></div>
+    </div>
+
+    <div class="mb-3">
+        <label for="author" class="form-label">Auteur</label>
+        <input type="text" id="author" class="form-control">
+        <div class="text-danger" id="errAuthor"></div>
+    </div>
+
+    <div class="mb-3">
+        <label for="year" class="form-label">Année</label>
+        <input type="number" id="year" class="form-control">
+        <div class="text-danger" id="errYear"></div>
+    </div>
+
+    <div class="mb-3">
+        <label for="type" class="form-label">Type</label>
+        <input type="text" id="type" class="form-control">
+        <div class="text-danger" id="errtype"></div>
+    </div>
+
+    <div class="mb-3">
+        <label for="prix" class="form-label">Prix</label>
+        <input type="text" id="prix" class="form-control">
+        <div class="text-danger" id="errprix"></div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100" id="submitBtn">Modifier</button>
+</form>
+
+<p class="mt-3 text-success" id="confirmation"></p>
+
+</div>
+
+<script>
+// ===============================
+// 0️⃣ Vérifier l'utilisateur
+// ===============================
+let user = JSON.parse(localStorage.getItem("currentUser"));
+if (!user) window.location.href = "../login/login.html";
+
+// ===============================
+// 1️⃣ Récupérer le livre via l’URL
+// ===============================
+const params = new URLSearchParams(window.location.search);
+const titleParam = decodeURIComponent(params.get("title") || "");
+
+let books = JSON.parse(localStorage.getItem("books") || "[]");
+
+// Chercher le livre correspondant
+let livre = books.find(b => b.title.toLowerCase() === titleParam.toLowerCase());
+if (!livre) {
+    alert("Livre introuvable !");
+    window.location.href = "../html/Liste_livres.html";
+}
+
+// ===============================
+// 2️⃣ Pré-remplir le formulaire
+// ===============================
+const form = document.getElementById("bookForm");
+const titleInput = document.getElementById("title");
+const authorInput = document.getElementById("author");
+const yearInput = document.getElementById("year");
+const typeInput = document.getElementById("type");
+const prixInput = document.getElementById("prix");
+
+const errTitle = document.getElementById("errTitle");
+const errAuthor = document.getElementById("errAuthor");
+const errYear = document.getElementById("errYear");
+const errType = document.getElementById("errtype");
+const errPrix = document.getElementById("errprix");
+const confirmation = document.getElementById("confirmation");
+
+let oldTitle; 
+
+if (livre) {
+    oldTitle = livre.title;
+    titleInput.value = livre.title;
+    authorInput.value = livre.author;
+    yearInput.value = livre.year;
+    typeInput.value = livre.type;
+    prixInput.value = livre.prix;
+}
+
+// ===============================
+// 3️⃣ Validation du formulaire
+// ===============================
+function validateForm() {
+    let valid = true;
+
+    errTitle.textContent = "";
+    errAuthor.textContent = "";
+    errYear.textContent = "";
+    errType.textContent = "";
+    errPrix.textContent = "";
+
+    if (titleInput.value.trim() === "") {
+        valid = false; errTitle.textContent = "Titre obligatoire";
+    }
+    if (authorInput.value.trim() === "") {
+        valid = false; errAuthor.textContent = "Auteur obligatoire";
+    }
+    const y = Number(yearInput.value);
+    if (yearInput.value.trim() === "" || isNaN(y) || y < 1900 || y > 2025) {
+        valid = false; errYear.textContent = "Année invalide";
+    }
+    if (typeInput.value.trim() === "") {
+        valid = false; errType.textContent = "Type obligatoire";
+    }
+    const p = Number(prixInput.value);
+    if (prixInput.value.trim() === "" || isNaN(p) || p <= 0) {
+        valid = false; errPrix.textContent = "Prix invalide";
+    }
+
+    return valid;
+}
+
+// ===============================
+// 4️⃣ Soumission du formulaire
+// ===============================
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    books = books.map(b => {
+        if (b.title === oldTitle) {
+            return {
+                title: titleInput.value.trim(),
+                author: authorInput.value.trim(),
+                year: Number(yearInput.value.trim()),
+                type: typeInput.value.trim(),
+                prix: Number(prixInput.value.trim())
+            };
+        }
+        return b;
+    });
+
+    localStorage.setItem("books", JSON.stringify(books));
+    form.reset();
+
+    confirmation.textContent = "Livre modifié avec succès ! ✔";
+
+    setTimeout(() => {
+        window.location.href = "../html/Liste_livres.html";
+    }, 2000);
+});
+</script>
+
+</body>
+</html>
