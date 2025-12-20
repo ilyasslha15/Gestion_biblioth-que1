@@ -160,6 +160,22 @@ if (window.location.pathname.includes("html") &&
         window.location.href = "liste_auteur.html";
     }
 
+    // Charger les catégories dans le select
+    function loadCategories() {
+        const books = getBooks();
+        const categories = [...new Set(books.map(b => b.type))];
+        const typeSelect = document.getElementById("type");
+        
+        categories.forEach(cat => {
+            const option = document.createElement("option");
+            option.value = cat;
+            option.textContent = cat;
+            typeSelect.appendChild(option);
+        });
+    }
+
+    loadCategories();
+
     document.getElementById("authorForm").addEventListener("submit", e => {
         e.preventDefault();
 

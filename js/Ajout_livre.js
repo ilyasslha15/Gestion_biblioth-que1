@@ -105,7 +105,6 @@ const confirmation = document.getElementById('confirmation');
 // Vérifier que les éléments principaux existent
 if (!title || !author || !year || !type || !prix) {
     console.warn("Éléments du formulaire manquants pour creationLivre");
-    return;
 }
 
 // ===============================
