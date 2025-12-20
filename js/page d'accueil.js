@@ -1,13 +1,30 @@
+// ===== Gestion du changement de langue =====
 var langSelector = document.getElementById('langSelector');
 
-  langSelector.addEventListener("change",()=>{
+// Quand l'utilisateur change la langue
+langSelector.addEventListener("change", () => {
     var lang = langSelector.value; // "fr" ou "en"
-    var elems = document.querySelectorAll('[data-fr]'); //on sélétione tous les éléments HTML qui ont l’attribut data-fr.
-    for (var i = 0; i < elems.length; i++) {
-      var text = elems[i].getAttribute('data-' + lang);//récupérer le texte dans l’attribut data-fr ou data-en selon la langue choisie.
-      if (text) {
-        elems[i].textContent = text;
-      }
+
+    // Sélectionner tous les éléments ayant l'attribut data-fr (ou data-en)
+    var elems = document.querySelectorAll('[data-fr]');
+
+    // Mettre à jour le texte de chaque élément selon la langue choisie
+    elems.forEach((elem) => {
+        var text = elem.getAttribute('data-' + lang);
+        if (text) {
+            elem.textContent = text;
+        }
+    });
+
+    // Sauvegarder la langue choisie dans le localStorage
+    localStorage.setItem("lang", lang);
+});
+
+// ===== Initialisation au chargement =====
+window.addEventListener('DOMContentLoaded', () => {//quand le contenu du DOM est chargé
+    var savedLang = localStorage.getItem("lang");
+    if (savedLang) {
+        langSelector.value = savedLang;
+        langSelector.dispatchEvent(new Event('change'));// Déclenche le changement de langue
     }
-    localStorage.setItem("lang",lang);
-  });
+});
