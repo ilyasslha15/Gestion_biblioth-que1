@@ -7,7 +7,7 @@ if (!user) {
 }
 
 // Afficher l’email de l’utilisateur
-document.getElementById("comma").textContent = user.email;
+document.getElementById("role").textContent = user.email;
 if (user.role === "admin") {        
  document.getElementById("comma").href = "../html/list_comm_admin.html";
 }
@@ -21,27 +21,29 @@ document.getElementById("deco").addEventListener("click", () => {
 // ===============================
 // 1️⃣ Traduction FR/EN
 // ===============================
-let currentLang = 'French'; // Langue par défaut
+let currentLang = localStorage.getItem("lang") || "fr";//langue par défaut
 const selectLang = document.getElementById("select");
+selectLang.value = currentLang;
 
 selectLang.addEventListener('change', () => {
     currentLang = selectLang.value;
+    selectLang.value = currentLang;
     translatePage();
 });
 
 function translatePage() {
     // Navbar
-    document.querySelector(".navbar-brand").textContent = currentLang === 'French' ? "Tableau de bord" : "Dashboard";
-    document.querySelector("#sidebar .nav-link:nth-child(1)").textContent = currentLang === 'French' ? "Tableau de bord" : "Dashboard";
-    document.querySelector("#sidebar .nav-link:nth-child(2)").textContent = currentLang === 'French' ? "Livres" : "Books";
-    document.querySelector("#sidebar .nav-link:nth-child(3)").textContent = currentLang === 'French' ? "Commandes" : "Orders";
-
+    document.querySelector(".navbar-brand").textContent = currentLang === 'fr' ? "Détailes" : "Details";
+    document.querySelector("#sidebar .nav-link:nth-child(1)").textContent = currentLang === 'fr' ? "Tableau de bord" : "Dashboard";
+    document.querySelector("#sidebar .nav-link:nth-child(2)").textContent = currentLang === 'fr' ? "Livres" : "Books";
+    document.querySelector("#sidebar .nav-link:nth-child(3)").textContent = currentLang === 'fr' ? "Commandes" : "Orders";
+   document.querySelector("#sidebar .nav-link:nth-child(4)").textContent = currentLang === 'fr' ? "Catégories" : "Category";
     // Titre page
-    document.querySelector("h2").textContent = currentLang === 'French' ? "📘 Détails du livre" : "📘 Book Details";
+    document.querySelector("h2").textContent = currentLang === 'fr' ? "📘 Détails du livre" : "📘 Book Details";
 
     // Labels infos
     const labels = document.querySelectorAll(".inf");
-    if (currentLang === 'French') {
+    if (currentLang === 'fr') {
         labels[0].textContent = "Titre : ";
         labels[1].textContent = "Auteur : ";
         labels[2].textContent = "Année : ";
@@ -64,6 +66,7 @@ function translatePage() {
          document.getElementById("deco").innerHTML="Logout";
 
     }
+    localStorage.setItem("lang", currentLang);
 }
 
 // Appliquer la langue par défaut
@@ -72,21 +75,21 @@ translatePage();
 // ===============================
 // 2️⃣ Récupérer le livre depuis l’URL
 // ===============================
-const params = new URLSearchParams(window.location.search);
-const titleParam = decodeURIComponent(params.get("title") || "");
+const params = new URLSearchParams(window.location.search);//prends ce qu’il y a après ? dans l’URL le mets dans params
+const titleParam = decodeURIComponent(params.get("title") || ""); // Récupère le paramètre 'title'
+// decodeURIComponent ----> sert à transformer un texte encodé dans une URL en texte normal.
 
 if (!titleParam) {
-    alert(currentLang === 'French' ? "Aucun titre fourni !" : "No title provided!");
+    alert(currentLang === 'fr' ? "Aucun titre fourni !" : "No title provided!");
     window.location.href = "../Liste/Liste.html";
 }
-
 let books = JSON.parse(localStorage.getItem("books") || "[]");
 
 // Chercher le livre correspondant
-let book = books.find(b => b.title.toLowerCase() === titleParam.toLowerCase());
+let book = books.find(b => b.title.toLowerCase() === titleParam.toLowerCase());//cherche le livre avec le titre correspondant
 
 if (!book) {
-    alert(currentLang === 'French' ? "Livre introuvable !" : "Book not found!");
+    alert(currentLang === 'fr' ? "Livre introuvable !" : "Book not found!");
     window.location.href = "../Liste/Liste.html";
 }
 
@@ -106,15 +109,16 @@ if (user.role !== "admin") {
     document.getElementById("btnEdit").style.display = "none";
 } else {
     document.getElementById("btnEdit").href = "Modifier_livre.html?title=" + encodeURIComponent(book.title);
+    // encodeURIComponent ----> sert à encoder un texte normal en texte compatible avec une URL.
 }
 
 // ===============================
 // 5️⃣ Export PDF
 // ===============================
 function generatePDF() {
-    const printContents = document.getElementById("pdf").innerHTML;
-    const printWindow = window.open('', '', 'height=100,width=300');
-    printWindow.document.write(printContents);
-    printWindow.document.close();
-    printWindow.print();
+    const printContents = document.getElementById("pdf").innerHTML;//récupère le contenu de la div pdf
+    const printWindow = window.open('', '', 'height=100,width=300');//ouvre une nouvelle fenêtre
+    printWindow.document.write(printContents);//écrit le contenu dans la nouvelle fenêtre
+    printWindow.document.close();//ferme le document pour que le navigateur sache que tout le contenu est chargé
+    printWindow.print();//lance l'impression
 }

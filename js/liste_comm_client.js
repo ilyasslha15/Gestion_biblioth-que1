@@ -31,21 +31,21 @@ function translate(key) {
 
 // Afficher les commandes de l'utilisateur
 function displayUserOrders() {
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    if(!user) return window.location.href="../login/login.html";
+    const user = JSON.parse(localStorage.getItem("currentUser"));//recuperer l'utilisateur connecté
+    if(!user) return window.location.href="../login/login.html";//rediriger si pas connecté
 
-    const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
-    const userOrders = allOrders.filter(order => order.user === user.email);
+    const allOrders = JSON.parse(localStorage.getItem("orders")) || [];//récupère toutes les commandes
+    const userOrders = allOrders.filter(order => order.user === user.email);//filtre les commandes de l'utilisateur connecté
 
-    const ordersContainer = document.getElementById("ordersContainer");
-    if(userOrders.length === 0) {
-        ordersContainer.innerHTML = `<p>${translate('noOrders')}</p>`;
+    const ordersContainer = document.getElementById("ordersContainer");//container pour afficher les commandes
+    if(userOrders.length === 0) {//si aucune commande
+        ordersContainer.innerHTML = `<p>${translate('noOrders')}</p>`;//afficher message si aucune commande
         return;
     }
 
-    let ordersHTML = `<h3>${translate('myOrders')}</h3>`;
-    userOrders.forEach((order, index) => {
-        const orderDate = new Date(order.date).toLocaleString(
+    let ordersHTML = `<h3>${translate('myOrders')}</h3>`;//titre des commandes
+    userOrders.forEach((order, index) => {//parcourir chaque commande
+        const orderDate = new Date(order.date).toLocaleString(//creer une date lisible
             getCurrentLanguage() === 'fr' ? 'fr-FR' : 'en-US'
         );
 
@@ -58,8 +58,8 @@ function displayUserOrders() {
                 <ul>
         `;
 
-        order.items.forEach(item => {
-            ordersHTML += `<li>${item.title} - ${item.price} $</li>`;
+        order.items.forEach(item => {//parcourir chaque article de la commande
+            ordersHTML += `<li>${item.title} - ${item.price} $</li>`;//afficher le titre et le prix de chaque article
         });
 
         ordersHTML += `</ul></div>`;
@@ -75,9 +75,9 @@ function changeLanguage(lang) {
 }
 
 // Initialisation
-document.addEventListener('DOMContentLoaded', () => {
-    const langSelector = document.getElementById('langSelector');
-    const savedLang = getCurrentLanguage();
+document.addEventListener('DOMContentLoaded', () => {//quand le document est chargé
+    const langSelector = document.getElementById('langSelector');//sélecteur de langue
+    const savedLang = getCurrentLanguage();//récupérer la langue sauvegardée
     langSelector.value = savedLang;
 
     langSelector.addEventListener('change', function() {

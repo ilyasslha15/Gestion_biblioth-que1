@@ -115,7 +115,7 @@ const titleParam = decodeURIComponent(params.get("title") || "");
 let books = JSON.parse(localStorage.getItem("books") || "[]");
 
 // Chercher le livre correspondant
-let livre = books.find(b => b.title.toLowerCase() === titleParam.toLowerCase());
+let livre = books.find(b => b.title.toLowerCase() === titleParam.toLowerCase());//cherche le livre avec le titre correspondant
 if (!livre) {
     alert("Livre introuvable !");
     window.location.href = "../html/Liste_livres.html";
@@ -134,15 +134,14 @@ const prixInput = document.getElementById("prix");
 const errTitle = document.getElementById("errTitle");
 const errAuthor = document.getElementById("errAuthor");
 const errYear = document.getElementById("errYear");
-const errType = document.getElementById("errtype");
 const errPrix = document.getElementById("errprix");
 const confirmation = document.getElementById("confirmation");
 
 let oldTitle; 
 
 if (livre) {
-    oldTitle = livre.title;
-    titleInput.value = livre.title;
+    oldTitle = livre.title;//sauvegarde l’ancien titre pour la modification
+    titleInput.value = livre.title;//pré-remplit les champs avec les valeurs actuelles du livre
     authorInput.value = livre.author;
     yearInput.value = livre.year;
     typeInput.value = livre.type;
@@ -171,9 +170,6 @@ function validateForm() {
     if (yearInput.value.trim() === "" || isNaN(y) || y < 1900 || y > 2025) {
         valid = false; errYear.textContent = "Année invalide";
     }
-    if (typeInput.value.trim() === "") {
-        valid = false; errType.textContent = "Type obligatoire";
-    }
     const p = Number(prixInput.value);
     if (prixInput.value.trim() === "" || isNaN(p) || p <= 0) {
         valid = false; errPrix.textContent = "Prix invalide";
@@ -186,12 +182,12 @@ function validateForm() {
 // 4️⃣ Soumission du formulaire
 // ===============================
 form.addEventListener("submit", function(e) {
-    e.preventDefault();
+    e.preventDefault();//empêche le rechargement de la page
     if (!validateForm()) return;
 
-    books = books.map(b => {
-        if (b.title === oldTitle) {
-            return {
+    books = books.map(b => {//met à jour le livre modifié
+        if (b.title === oldTitle) {//utilise l’ancien titre pour trouver le bon livre
+            return {//met à jour les champs avec les nouvelles valeurs
                 title: titleInput.value.trim(),
                 author: authorInput.value.trim(),
                 year: Number(yearInput.value.trim()),
@@ -199,10 +195,11 @@ form.addEventListener("submit", function(e) {
                 prix: Number(prixInput.value.trim())
             };
         }
-        return b;
+        return b;//pour les autres livres, rien ne change
     });
+    //map --> crée un nouveau tableau en appliquant une fonction à chaque élément du tableau original.
 
-    localStorage.setItem("books", JSON.stringify(books));
+    localStorage.setItem("books", JSON.stringify(books));//enregistre les modifications dans le localStorage
     form.reset();
 
     confirmation.textContent = "Livre modifié avec succès ! ✔";

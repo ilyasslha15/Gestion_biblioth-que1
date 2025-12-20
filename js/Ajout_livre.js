@@ -120,10 +120,6 @@ form.addEventListener('submit', e => {
         valid = false;
     } else errYear.textContent = '';
 
-    if (!['horror','adventure','action'].includes(type.value.trim())) {
-        errType.textContent = currentLang === 'French' ? 'Vous devez choisir entre horror, adventure, action' : 'You must choose between horror, adventure, action';
-        valid = false;
-    } else errType.textContent = '';
 
     if (Number(prix.value.trim()) <= 0) {
         errPrix.textContent = currentLang === "French" ? 'Le prix doit être > 0' : 'Price must be > 0';
@@ -139,7 +135,8 @@ form.addEventListener('submit', e => {
         author: author.value.trim(),
         year: y,
         type: type.value.trim(),
-        prix: Number(prix.value.trim())
+        prix: Number(prix.value.trim()),
+        available: true
     });
     localStorage.setItem('books', JSON.stringify(books));
 
