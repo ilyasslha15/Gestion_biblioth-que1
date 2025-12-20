@@ -1,24 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auteurs - Liste</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <title>Liste des auteurs</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-     <table class="table table-striped">
-        <thead>
+<body class="container mt-4">
+
+    <h2 class="mb-4">📚 Liste des auteurs</h2>
+
+    <div class="mb-3">
+        <input type="text" id="searchInput" class="form-control"
+               placeholder="Rechercher un auteur...">
+    </div><br>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
             <tr>
-                <th>Nom</th>
-                <th>Prenom</th>
-                <th>Date de naissance</th>
+                <th>Auteur</th>
+                <th>Nombre de livres</th>
+                <th>Actions</th>
             </tr>
         </thead>
-        <tbody id="authorTableBody"></tbody>
+        <tbody id="authorsTableBody">
+            <!-- rempli par JS -->
+        </tbody>
     </table>
-</div>
+    <script src="../js/auteurs.js"></script>
 
-<script src="../js/auteurs.js"></script>
 </body>
 </html>
