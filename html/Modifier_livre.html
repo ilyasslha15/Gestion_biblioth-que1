@@ -10,36 +10,34 @@
 
 <style>
 body {
-    background-color: #ffffff;
+    background-color: #f8f9fa;
     font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-/* Conteneur central */
 #content {
-    max-width: 600px;
-    margin: 100px auto;
+    max-width: 450px; /* plus compact */
+    margin: 60px auto; /* moins de marge verticale */
 }
 
-/* Formulaire style card */
 #bookForm {
     background: #fff;
-    padding: 30px;
+    padding: 20px; /* réduit padding */
     border-radius: 1rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
 }
 
-/* Titres */
 h2#pageTitle {
     color: #0d6efd;
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    font-size: 1.5rem; /* un peu plus petit */
 }
 
-/* Boutons */
 .btn-primary {
     background-color: #0d6efd;
     border-color: #0d6efd;
-    color: #fff;
 }
 .btn-primary:hover {
     background-color: #0661d1;
@@ -47,10 +45,11 @@ h2#pageTitle {
 }
 
 .text-danger {
-    font-size: 0.9em;
+    font-size: 0.85rem;
 }
 .text-success {
-    font-size: 0.95em;
+    font-size: 0.9rem;
+    text-align: center;
 }
 </style>
 </head>
@@ -58,72 +57,66 @@ h2#pageTitle {
 <body>
 
 <div id="content">
+    <h2 id="pageTitle">Modifier un livre</h2>
 
-<h2 id="pageTitle">Modifier un livre</h2>
+    <form id="bookForm">
+        <div class="mb-2">
+            <label for="title" class="form-label">Titre</label>
+            <input type="text" id="title" class="form-control form-control-sm">
+            <div class="text-danger" id="errTitle"></div>
+        </div>
 
-<form id="bookForm">
-    <div class="mb-3">
-        <label for="title" class="form-label">Titre</label>
-        <input type="text" id="title" class="form-control">
-        <div class="text-danger" id="errTitle"></div>
-    </div>
+        <div class="mb-2">
+            <label for="author" class="form-label">Auteur</label>
+            <input type="text" id="author" class="form-control form-control-sm">
+            <div class="text-danger" id="errAuthor"></div>
+        </div>
 
-    <div class="mb-3">
-        <label for="author" class="form-label">Auteur</label>
-        <input type="text" id="author" class="form-control">
-        <div class="text-danger" id="errAuthor"></div>
-    </div>
+        <div class="mb-2">
+            <label for="year" class="form-label">Année</label>
+            <input type="number" id="year" class="form-control form-control-sm">
+            <div class="text-danger" id="errYear"></div>
+        </div>
 
-    <div class="mb-3">
-        <label for="year" class="form-label">Année</label>
-        <input type="number" id="year" class="form-control">
-        <div class="text-danger" id="errYear"></div>
-    </div>
+        <div class="mb-2">
+            <label for="type" class="form-label">Type</label>
+            <input type="text" id="type" class="form-control form-control-sm">
+            <div class="text-danger" id="errtype"></div>
+        </div>
 
-    <div class="mb-3">
-        <label for="type" class="form-label">Type</label>
-        <input type="text" id="type" class="form-control">
-        <div class="text-danger" id="errtype"></div>
-    </div>
+        <div class="mb-2">
+            <label for="prix" class="form-label">Prix</label>
+            <input type="text" id="prix" class="form-control form-control-sm">
+            <div class="text-danger" id="errprix"></div>
+        </div>
 
-    <div class="mb-3">
-        <label for="prix" class="form-label">Prix</label>
-        <input type="text" id="prix" class="form-control">
-        <div class="text-danger" id="errprix"></div>
-    </div>
+        <button type="submit" class="btn btn-primary w-100 btn-sm" id="submitBtn">Modifier</button>
+    </form>
 
-    <button type="submit" class="btn btn-primary w-100" id="submitBtn">Modifier</button>
-</form>
-
-<p class="mt-3 text-success" id="confirmation"></p>
-
+    <p class="mt-2 text-success" id="confirmation"></p>
 </div>
 
 <script>
 // ===============================
-// 0️⃣ Vérifier l'utilisateur
+// Vérification utilisateur
 // ===============================
 let user = JSON.parse(localStorage.getItem("currentUser"));
 if (!user) window.location.href = "../login/login.html";
 
 // ===============================
-// 1️⃣ Récupérer le livre via l’URL
+// Récupération livre
 // ===============================
 const params = new URLSearchParams(window.location.search);
 const titleParam = decodeURIComponent(params.get("title") || "");
 
 let books = JSON.parse(localStorage.getItem("books") || "[]");
-
-// Chercher le livre correspondant
-let livre = books.find(b => b.title.toLowerCase() === titleParam.toLowerCase());//cherche le livre avec le titre correspondant
+let livre = books.find(b => b.title.toLowerCase() === titleParam.toLowerCase());
 if (!livre) {
     alert("Livre introuvable !");
     window.location.href = "../html/Liste_livres.html";
 }
 
-// ===============================
-// 2️⃣ Pré-remplir le formulaire
-// ===============================
+// Pré-remplir le formulaire
 const form = document.getElementById("bookForm");
 const titleInput = document.getElementById("title");
 const authorInput = document.getElementById("author");
@@ -137,19 +130,16 @@ const errYear = document.getElementById("errYear");
 const errPrix = document.getElementById("errprix");
 const confirmation = document.getElementById("confirmation");
 
-let oldTitle; 
+let oldTitle = livre.title;
 
-if (livre) {
-    oldTitle = livre.title;//sauvegarde l’ancien titre pour la modification
-    titleInput.value = livre.title;//pré-remplit les champs avec les valeurs actuelles du livre
-    authorInput.value = livre.author;
-    yearInput.value = livre.year;
-    typeInput.value = livre.type;
-    prixInput.value = livre.prix;
-}
+titleInput.value = livre.title;
+authorInput.value = livre.author;
+yearInput.value = livre.year;
+typeInput.value = livre.type;
+prixInput.value = livre.prix;
 
 // ===============================
-// 3️⃣ Validation du formulaire
+// Validation formulaire
 // ===============================
 function validateForm() {
     let valid = true;
@@ -157,56 +147,39 @@ function validateForm() {
     errTitle.textContent = "";
     errAuthor.textContent = "";
     errYear.textContent = "";
-    errType.textContent = "";
     errPrix.textContent = "";
 
-    if (titleInput.value.trim() === "") {
-        valid = false; errTitle.textContent = "Titre obligatoire";
-    }
-    if (authorInput.value.trim() === "") {
-        valid = false; errAuthor.textContent = "Auteur obligatoire";
-    }
+    if (titleInput.value.trim() === "") { valid = false; errTitle.textContent = "Titre obligatoire"; }
+    if (authorInput.value.trim() === "") { valid = false; errAuthor.textContent = "Auteur obligatoire"; }
     const y = Number(yearInput.value);
-    if (yearInput.value.trim() === "" || isNaN(y) || y < 1900 || y > 2025) {
-        valid = false; errYear.textContent = "Année invalide";
-    }
+    if (yearInput.value.trim() === "" || isNaN(y) || y < 1900 || y > 2025) { valid = false; errYear.textContent = "Année invalide"; }
     const p = Number(prixInput.value);
-    if (prixInput.value.trim() === "" || isNaN(p) || p <= 0) {
-        valid = false; errPrix.textContent = "Prix invalide";
-    }
+    if (prixInput.value.trim() === "" || isNaN(p) || p <= 0) { valid = false; errPrix.textContent = "Prix invalide"; }
 
     return valid;
 }
 
 // ===============================
-// 4️⃣ Soumission du formulaire
+// Soumission formulaire
 // ===============================
 form.addEventListener("submit", function(e) {
-    e.preventDefault();//empêche le rechargement de la page
+    e.preventDefault();
     if (!validateForm()) return;
 
-    books = books.map(b => {//met à jour le livre modifié
-        if (b.title === oldTitle) {//utilise l’ancien titre pour trouver le bon livre
-            return {//met à jour les champs avec les nouvelles valeurs
-                title: titleInput.value.trim(),
-                author: authorInput.value.trim(),
-                year: Number(yearInput.value.trim()),
-                type: typeInput.value.trim(),
-                prix: Number(prixInput.value.trim())
-            };
-        }
-        return b;//pour les autres livres, rien ne change
-    });
-    //map --> crée un nouveau tableau en appliquant une fonction à chaque élément du tableau original.
+    books = books.map(b => b.title === oldTitle ? {
+        title: titleInput.value.trim(),
+        author: authorInput.value.trim(),
+        year: Number(yearInput.value.trim()),
+        type: typeInput.value.trim(),
+        prix: Number(prixInput.value.trim())
+    } : b);
 
-    localStorage.setItem("books", JSON.stringify(books));//enregistre les modifications dans le localStorage
-    form.reset();
-
+    localStorage.setItem("books", JSON.stringify(books));
     confirmation.textContent = "Livre modifié avec succès ! ✔";
 
     setTimeout(() => {
         window.location.href = "../html/Liste_livres.html";
-    }, 2000);
+    }, 1500);
 });
 </script>
 

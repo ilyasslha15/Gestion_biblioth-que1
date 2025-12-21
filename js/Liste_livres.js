@@ -4,7 +4,17 @@ let books = JSON.parse(localStorage.getItem("books")) || [];
 let user = JSON.parse(localStorage.getItem("currentUser"));
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-if (!user) {
+let tab_type = [...new Set(books.map(b => b.type))];// Récupérer les types uniques des livres
+let selecteur = document.getElementById("typeFilter");// Sélecteur de type
+
+tab_type.forEach(type => {// Ajouter les options de type au sélecteur
+    let option = document.createElement("option");
+    option.value = type;
+    option.textContent = type;
+    selecteur.appendChild(option);
+}); 
+
+if(!user) {
     window.location.href = "../html/login.html";
 }
 
@@ -181,13 +191,32 @@ if (user.role === "user") {
 }
 
 // 6 - TRADUCTION
-document.getElementById("langSelector").addEventListener("change", function () {
-    let lang = this.value;
+function applyLanguage(lang) {
+
+    //Textes normaux
     document.querySelectorAll("[data-fr]").forEach(el => {
-        el.textContent = el.getAttribute("data-" + lang);
+        const value = el.getAttribute(`data-${lang}`);
+        if (value) el.textContent = value;
     });
+
+    //Placeholders (input, select, textarea)
+    document.querySelectorAll("[data-fr-placeholder]").forEach(el => {
+        const value = el.getAttribute(`data-${lang}-placeholder`);
+        if (value) el.placeholder = value;
+    });
+
+    //Sauvegarde langue
     localStorage.setItem("lang", lang);
+}
+const langSelector = document.getElementById("langSelector");
+let savedLang = localStorage.getItem("lang") || "fr";
+langSelector.value = savedLang;
+applyLanguage(savedLang);
+
+langSelector.addEventListener("change", () => {
+    applyLanguage(langSelector.value);
 });
+
 
 // 7 - DECONNEXION
 document.getElementById("deco").addEventListener("click", () => {

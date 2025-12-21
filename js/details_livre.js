@@ -38,7 +38,9 @@ function translatePage() {
     document.querySelector("#sidebar .nav-link:nth-child(2)").textContent = currentLang === 'fr' ? "Livres" : "Books";
     document.querySelector("#sidebar .nav-link:nth-child(3)").textContent = currentLang === 'fr' ? "Commandes" : "Orders";
    document.querySelector("#sidebar .nav-link:nth-child(4)").textContent = currentLang === 'fr' ? "Catégories" : "Category";
-    // Titre page
+    document.querySelector("#sidebar .nav-link:nth-child(5)").textContent = currentLang === 'fr' ? "Listes des auteurs" : "Authors list";
+
+   // Titre page
     document.querySelector("h2").textContent = currentLang === 'fr' ? "📘 Détails du livre" : "📘 Book Details";
 
     // Labels infos

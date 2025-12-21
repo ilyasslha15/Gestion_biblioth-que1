@@ -14,12 +14,10 @@ document.getElementById("deco").addEventListener("click", () => {//ajout gestion
 /****************************************
  * Traduction FR/EN
  ****************************************/
-let currentLang = 'fr';//langue par défaut
+let currentLang = localStorage.getItem("lang") || "fr";//langue courante
 const langSelector = document.getElementById("langSelector");//sélecteur de langue
-langSelector.addEventListener("change", () => {//écouteur d'événement pour le changement de langue
-    currentLang = langSelector.value;//mettre à jour la langue courante
-    translatePage();//traduire la page
-});
+langSelector.value = currentLang;//mettre à jour le sélecteur avec la langue courante
+
 
 function translatePage() {
     // Navbar & Sidebar
@@ -31,49 +29,88 @@ function translatePage() {
 
     // Placeholder
     document.getElementById("searchTitle").placeholder = currentLang === "fr" ? "Email du client" : "Client email";//mettre à jour le placeholder du champ de recherche
+    localStorage.setItem("lang", currentLang);//sauvegarder la langue courante
 }
 translatePage();
+langSelector.addEventListener("change", () => {//écouteur d'événement pour le changement de langue
+    currentLang = langSelector.value;//mettre à jour la langue courante
+    translatePage();//traduire la page
+});
 
 /****************************************
  * Chargement des commandes
  ****************************************/
 let orders = JSON.parse(localStorage.getItem("orders")) || []; //on récupère la liste des commandes
+if(orders.length === 0) {
+   document.getElementById("titles").style.display = "none";
+document.getElementById("ligne_info").style.display = "none";
+  document.getElementById("res").innerText = currentLang === "fr" ? "Aucune commande disponible." : "No orders available.";
+}
 const tbody = document.querySelector("#table2 tbody"); //le tbody ou on va afficher les commandes
 
-function AllOrders(userEmail) {
-    tbody.innerHTML = '';
-    orders.forEach(order => { //on parcourt la list des livres
-        if (!userEmail || order.user === userEmail) {
-            order.items.forEach(item => {//
-                let tr = document.createElement("tr");
+function AllOrders(userEmail = null) {
+    const tbody = document.querySelector("#table2 tbody");
+    tbody.innerHTML = ""; // vider le tableau
+    const test10Div = document.getElementById("test10");
+    const ligneInfo = document.getElementById("ligne_info");
+    const resMessage = document.getElementById("res");
 
-                let tdEmail = document.createElement("td");
-                tdEmail.innerText = order.user;
+    // Filtrer les commandes si un email est fourni
+    let filteredOrders = orders;
+    if (userEmail) {
+        filteredOrders = orders.filter(o => o.user === userEmail);
+    }
 
-                let tdBook = document.createElement("td");
-                tdBook.innerText = item.title;
+    // Vérifier s’il y a des commandes
+    const hasOrders = filteredOrders.some(o => o.items && o.items.length > 0);
 
-                let tdPrice = document.createElement("td");
-                tdPrice.innerText = item.price;
+    if (!hasOrders) {
+        // Masquer le filtre et le tableau
+        test10Div.style.display = "none";
+        ligneInfo.style.display = "none";
+        resMessage.innerText = currentLang === "fr" ? 
+            "Aucune commande disponible." : "No orders available.";
+        return;
+    }
 
-                let tdBtn = document.createElement("td");
-                let button = document.createElement("button");
-                button.className = "btn btn-success mb-3";
-                button.innerText = currentLang === "fr" ? "Exporter" : "Export";
-                button.id = item.title + " " + order.user;
-                button.onclick = () => Export_Comm(button.id);
-                tdBtn.appendChild(button);
+    // Sinon afficher le filtre et le tableau
+    test10Div.style.display = "block";
+    ligneInfo.style.display = "table-header-group";
+    resMessage.innerText = "";
 
-                tr.appendChild(tdEmail);
-                tr.appendChild(tdBook);
-                tr.appendChild(tdPrice);
-                tr.appendChild(tdBtn);
+    // Afficher les commandes
+    filteredOrders.forEach(order => {
+        order.items.forEach(item => {
+            let tr = document.createElement("tr");
 
-                tbody.appendChild(tr);
-            });
-        }
+            let tdEmail = document.createElement("td");
+            tdEmail.innerText = order.user;
+
+            let tdBook = document.createElement("td");
+            tdBook.innerText = item.title;
+
+            let tdPrice = document.createElement("td");
+            tdPrice.innerText = item.price;
+
+            let tdBtn = document.createElement("td");
+            let button = document.createElement("button");
+            button.className = "btn btn-success mb-3";
+            button.innerText = currentLang === "fr" ? "Exporter" : "Export";
+            button.id = item.title + " " + order.user;
+            button.onclick = () => Export_Comm(button.id);
+            tdBtn.appendChild(button);
+
+            tr.appendChild(tdEmail);
+            tr.appendChild(tdBook);
+            tr.appendChild(tdPrice);
+            tr.appendChild(tdBtn);
+
+            tbody.appendChild(tr);
+        });
     });
 }
+
+
 
 /****************************************
  * Export d’une commande

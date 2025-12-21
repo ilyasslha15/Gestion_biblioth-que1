@@ -58,7 +58,8 @@ button:hover {
         <a class="nav-link" href="../html/dashboard.html" data-fr="Tableau de bord" data-en="Dashboard">Tableau de bord</a>
         <a class="nav-link" href="../html/Liste_livres.html" data-fr="Livres" data-en="Books">Livres</a>
         <a class="nav-link" href="#" data-fr="Commandes" data-en="Orders">Commandes</a>
-        <a class="nav-link" href="../html/Catégorie.html" data-fr="Catégories" data-en="Orders">Commandes</a>
+        <a class="nav-link" href="../html/Catégorie.html" data-fr="Catégories" data-en="Category">Catégories</a>
+         <a class="nav-link" data-fr="Liste des auteurs" data-en="Authors list"  id="cat" href="../html/liste_auteur.html">Listes des auteurs</a>
     </nav>
 </div>
 
@@ -78,21 +79,20 @@ button:hover {
 
 <!-- MAIN CONTENT -->
 <main id="main">
-    <div class="w-75 mx-auto">
+    <div  id="cont" class="w-75 mx-auto">
         <!-- FILTRAGE -->
-        <div class="card p-3 mb-3">
+        <div id="test10" class="card p-3 mb-3">
             <div class="row g-3">
-                <div class="col-md-6">
+                <div id="titles" class="col-md-6">
                     <input type="text" id="searchTitle" class="form-control" placeholder="Client email">
                     <p class="text-danger mt-2" id="error"></p>
                 </div>
             </div>
         </div>
-
         <!-- TABLEAU -->
-        <div id="liste" class="table-responsive shadow-sm rounded">
+        <div class="table-responsive shadow-sm rounded">
             <table id="table2" class="table table-hover table-bordered text-center align-middle mb-0">
-                <thead class="table-light">
+                <thead id="ligne_info" class="table-light">
                     <tr>
                         <th data-fr="Client" data-en="Client" style="color:blue">Client</th>
                         <th data-fr="Livre" data-en="Book" style="color:blue">Livre</th>
@@ -103,6 +103,7 @@ button:hover {
                 <tbody></tbody>
             </table>
         </div>
+                  <h4  id="res"></h4>
     </div>
 </main>
 <script src="../js/list_comm_admin.js" defer></script>

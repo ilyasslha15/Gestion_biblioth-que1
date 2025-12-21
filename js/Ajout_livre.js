@@ -20,6 +20,8 @@ function translatePage() {
     links[0].textContent = currentLang === 'French' ? "Tableau de bord" : "Dashboard";
     links[1].textContent = currentLang === 'French' ? "Livres" : "Books";
     links[2].textContent = currentLang === 'French' ? "Commandes" : "Orders";
+    links[3].textContent = currentLang === 'French' ? "Catégories" : "Category";
+    links[4].textContent = currentLang === 'French' ? "Liste des auteurs" : "Authors list";
 
     // Titre page
     document.querySelector("#content h2").textContent = currentLang === 'French' ? "Ajouter un livre" : "Add Book";
@@ -33,6 +35,7 @@ function translatePage() {
 
     // Bouton
     form.querySelector("button").textContent = currentLang === 'French' ? "Créer" : "Create";
+    localStorage.setItem("lang", currentLang === 'French' ? "fr" : "en");
 }
 
 // ===============================

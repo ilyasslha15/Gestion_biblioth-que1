@@ -102,26 +102,29 @@ function addWelcomeText(prefix) {
 // Traductions des liens et textes
 function updateLinksTextFR() {
     if (user.role !== "admin") {
-        document.querySelectorAll("a")[4].textContent = "Lister livres";
-    } else {
-        document.querySelectorAll("a")[4].textContent = "Ajouter livre";
         document.querySelectorAll("a")[5].textContent = "Lister livres";
+    } else {
+        document.querySelectorAll("a")[5].textContent = "Ajouter livre";
+        document.querySelectorAll("a")[6].textContent = "Lister livres";
     }
     document.querySelectorAll(".nav-link")[0].textContent = "Tableau de bord";
     document.querySelectorAll(".nav-link")[1].textContent = "Livre";
     document.querySelectorAll(".nav-link")[2].textContent = "Commandes";
+    document.querySelectorAll(".nav-link")[4].textContent = "Listes des auteurs";
 }
 
 function updateLinksTextEN() {
     if (user.role !== "admin") {
-        document.querySelectorAll("a")[4].textContent = "List books";
-    } else {
-        document.querySelectorAll("a")[4].textContent = "Add book";
         document.querySelectorAll("a")[5].textContent = "List books";
+    } else {
+        document.querySelectorAll("a")[5].textContent = "Add book";
+        document.querySelectorAll("a")[6].textContent = "List books";
     }
     document.querySelectorAll(".nav-link")[0].textContent = "Dashboard";
     document.querySelectorAll(".nav-link")[1].textContent = "Book";
     document.querySelectorAll(".nav-link")[2].textContent = "Orders";
+     document.querySelectorAll(".nav-link")[4].textContent = "Author list";
+
 }
 
 // Traductions des titres de l'overview
@@ -147,7 +150,7 @@ function french() {
     char1.data.datasets[0].label = "Revenue";
     char1.update();
     document.querySelector("#premsp").textContent = "Tableau de bord";
-    document.getElementById("cat").textContent = "Catégorie";
+    document.getElementById("cat").textContent = "Catégories";
 }
 
 function english() {
@@ -168,13 +171,13 @@ function english() {
 // 6️⃣ Initialisation de la langue
 // ===============================
 const savedLang = localStorage.getItem("lang") || "fr";
+selectLang.value = savedLang;
 if (savedLang === "fr") french(); else english();
-selectLang.value = savedLang === "fr" ? "French" : "English";
 
 // Changement de langue par l'utilisateur
 selectLang.addEventListener("change", () => {
     const val = selectLang.value;
-    if (val === "French") { 
+    if (val === "fr") { 
         french(); 
         localStorage.setItem("lang", "fr"); 
     } else { 
@@ -182,3 +185,4 @@ selectLang.addEventListener("change", () => {
         localStorage.setItem("lang", "en"); 
     }
 });
+
