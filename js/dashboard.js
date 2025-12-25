@@ -1,10 +1,11 @@
 // ===============================
 // 1️⃣ Vérification utilisateur connecté
 // ===============================
-const user = JSON.parse(localStorage.getItem("currentUser"));
+let user = JSON.parse(localStorage.getItem("currentUser"));
 if (!user) {
-    window.location.href = "../html/login.html"; // Redirection si non connecté
+    window.location.href = "../html/login.hml"; // Redirection si non connecté
 }
+
 
 // ===============================
 // 2️⃣ Gestion du rôle utilisateur et affichage
@@ -22,33 +23,72 @@ if (user.role === "admin") ordersLink.href = "../html/list_comm_admin.html";
 
 // Message de bienvenue
 const nameDiv = document.getElementById("name");
-const welcomeMsg = document.createElement("p");
+let welcomeMsg = document.createElement("p");
 welcomeMsg.textContent = `Bienvenue ${user.role}`;
 welcomeMsg.style.fontSize = "large";
 nameDiv.appendChild(welcomeMsg);
 
+
+// authors
+
+ 
+    let au = JSON.parse(localStorage.getItem("books"));
+    let VAR = [];
+au.forEach(elm => {
+    if(!VAR[elm.author]){
+        VAR[elm.author]=1;
+    }else{
+        VAR[elm.author] +=1;
+    }
+});
+ const Sort_A = Object.keys(VAR).sort((a,b)=> VAR[b] - VAR[a])
+console.log(Sort_A);
+
+
 // ===============================
 // 3️⃣ Graphiques et statistiques
 // ===============================
+const orders = JSON.parse(localStorage.getItem("orders"))||[];
 const dia1 = document.getElementById("dia1");
 const dia2 = document.getElementById("dia2");
+const dia3 = document.getElementById("dia3");
 
 let hor = 0, adv = 0, act = 0;
-const Livres = JSON.parse(localStorage.getItem("books")) || [];
+let chart2, char1;
 
+const Livres = JSON.parse(localStorage.getItem("books")) || [];
 Livres.forEach(book => {
     if (book.type === "horror") hor++;
     if (book.type === "adventure") adv++;
     if (book.type === "action") act++;
 });
+const counts = Livres.reduce((acc,book)=>{
+    if(acc[book.type]){
+        acc[book.type]+=1;
+    }else{
+        acc[book.type]=1;
+    }
+    return acc;
+},{})
+ const Sort_T = Object.keys(counts).sort((a,b)=> counts[b] - counts[a])
+ let ord_T = {}
+orders.forEach(elm => {
+    if(ord_T[elm.user]){
+       ord_T[elm.user]+=1 
+    }else{
+       ord_T[elm.user]=1 
+    }
+ });
+const ord_key = Object.keys(ord_T)
+const ord_value = Object.values(ord_T)
 
 // ----- Diagramme circulaire -----
-const chart2 = new Chart(dia2, {
+chart2 = new Chart(dia2, {
     type: 'doughnut',
     data: {
-        labels: ['Horror', 'Adventure', 'Action'],
+        labels: [ord_key[0], ord_key[1],ord_key[2]],
         datasets: [{
-            data: [hor, adv, act],
+            data: [ord_value[0], ord_value[1], ord_value[2]],
             backgroundColor: ['#4e73df', '#1cc88a', '#f6c23e'],
         }]
     },
@@ -56,17 +96,32 @@ const chart2 = new Chart(dia2, {
         responsive: true,
         plugins: {
             legend: { position: 'bottom' },
-            title: { display: true, text: "Chiffre d'affaires mensuel" }
+            title: { display: true, text: "Top 3 Clients" }
         }
     }
 });
 
 // ----- Diagramme en barres -----
-const char1 = new Chart(dia1, {
+char1 = new Chart(dia1, {
     type: 'bar',
     data: {
-        labels: ['Action', 'Adventure', 'Horror'],
-        datasets: [{ data: [act, adv, hor], backgroundColor: '#4e73df' }]
+        labels: [Sort_T[0], Sort_T[1], Sort_T[2]],
+        datasets: [{
+            data: [counts[Sort_T[0]],counts[Sort_T[1]], counts[Sort_T[2]]],
+            backgroundColor: '#4e73df'
+        }]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+});
+
+let char3 = new Chart(dia3, {
+    type: 'bar',
+    data: {
+        labels: [Sort_A[0], Sort_A[1], Sort_A[2]],
+        datasets: [{
+            data: [ VAR[Sort_A[0]],VAR[Sort_A[1]], VAR[Sort_A[2]]],
+            backgroundColor: '#4e73df'
+        }]
     },
     options: { responsive: true, maintainAspectRatio: false }
 });
@@ -77,7 +132,7 @@ document.getElementById("NOB").textContent = Livres.length;
 // Chiffre d'affaires pour admin
 if (user.role === "admin") {
     const orders = JSON.parse(localStorage.getItem("orders")) || [];
-    const totale = orders.reduce((sum, order) => sum + order.items.reduce((s, item) => s + Number(item.price), 0), 0);
+    let totale = orders.reduce((sum, order) => sum + order.items.reduce((s, item) => s + Number(item.price), 0), 0);
     document.getElementById("TR").textContent = totale;
 }
 
@@ -94,12 +149,53 @@ document.getElementById("deco").addEventListener("click", () => {
 // ===============================
 const selectLang = document.getElementById("select");
 
-// Fonction pour mettre à jour le message de bienvenue
+function french() {
+    // Traduction textes
+    document.querySelector("button").textContent = "Déconnecté";
+    addWelcomeText("Bienvenue");
+
+    updateLinksTextFR();
+    updateOverviewTextFR();
+
+    // Graphiques
+    chart2.options.plugins.title.text = "Top 3 des clients";
+    chart2.data.datasets[0].label = "Apercu";
+    chart2.update();
+
+    char1.data.datasets[0].label = "Top 3 catagorie";
+    char1.update();
+     char3.data.datasets[0].label = "Top 3 des Authors";
+    char3.update();
+
+    document.querySelector("#premsp").textContent = "Tableau de bord";
+}
+
+function english() {
+    // Traduction textes
+    document.querySelector("button").textContent = "Logout";
+    addWelcomeText("Welcome");
+
+    updateLinksTextEN();
+    updateOverviewTextEN();
+
+    // Graphiques
+    chart2.options.plugins.title.text = "Top 3 Clients";
+    chart2.data.datasets[0].label = "OverView";
+    chart2.update();
+
+    char1.data.datasets[0].label = "Income";
+    char1.update();
+ char3.data.datasets[0].label = "Top 3 Author";
+    char3.update();
+    document.querySelector("#premsp").textContent = "Dashboard";
+}
+
+// Helpers pour traduction
 function addWelcomeText(prefix) {
     welcomeMsg.textContent = `${prefix} ${user.role}`;
 }
 
-// Traductions des liens et textes
+
 function updateLinksTextFR() {
     if (user.role !== "admin") {
         document.querySelectorAll("a")[5].textContent = "Lister livres";
@@ -110,7 +206,8 @@ function updateLinksTextFR() {
     document.querySelectorAll(".nav-link")[0].textContent = "Tableau de bord";
     document.querySelectorAll(".nav-link")[1].textContent = "Livre";
     document.querySelectorAll(".nav-link")[2].textContent = "Commandes";
-    document.querySelectorAll(".nav-link")[4].textContent = "Listes des auteurs";
+    document.querySelectorAll(".nav-link")[3].textContent = "Catégories";
+    document.querySelectorAll(".nav-link")[4].textContent = "Liste des auteurs";
 }
 
 function updateLinksTextEN() {
@@ -123,66 +220,35 @@ function updateLinksTextEN() {
     document.querySelectorAll(".nav-link")[0].textContent = "Dashboard";
     document.querySelectorAll(".nav-link")[1].textContent = "Book";
     document.querySelectorAll(".nav-link")[2].textContent = "Orders";
-     document.querySelectorAll(".nav-link")[4].textContent = "Author list";
-
+    document.querySelectorAll(".nav-link")[3].textContent = "Categorys";
+    document.querySelectorAll(".nav-link")[4].textContent = "Author list";
 }
 
-// Traductions des titres de l'overview
 function updateOverviewTextFR() {
-    const titles = ["Aperçu", "Chiffre d'affaires total", "Nombre des livres", "Croissance du chiffre d'affaires (%)"];
+    const titles = ["Aperçu", "Chiffre d'affaires total", "Nombre des livres", "Nombre total d'abonnés"];
     document.querySelectorAll("h5").forEach((h, i) => h.textContent = titles[i]);
 }
 
 function updateOverviewTextEN() {
-    const titles = ["OverView", "Total Revenue", "Number Of the Books", "Revenue Growth (%)"];
+    const titles = ["OverView", "Totale Revenue", "Number Of the Books", "Total number of subscribers"];
     document.querySelectorAll("h5").forEach((h, i) => h.textContent = titles[i]);
 }
 
-// Fonctions principales pour changer de langue
-function french() {
-    document.querySelector("button").textContent = "Déconnecté";
-    addWelcomeText("Bienvenue");
-    updateLinksTextFR();
-    updateOverviewTextFR();
-    chart2.options.plugins.title.text = "Chiffre d'affaires mensuel";
-    chart2.data.datasets[0].label = "Apercu";
-    chart2.update();
-    char1.data.datasets[0].label = "Revenue";
-    char1.update();
-    document.querySelector("#premsp").textContent = "Tableau de bord";
-    document.getElementById("cat").textContent = "Catégories";
-}
-
-function english() {
-    document.querySelector("button").textContent = "Disconnect";
-    addWelcomeText("Welcome");
-    updateLinksTextEN();
-    updateOverviewTextEN();
-    chart2.options.plugins.title.text = "Monthly Revenue";
-    chart2.data.datasets[0].label = "Overview";
-    chart2.update();
-    char1.data.datasets[0].label = "Income";
-    char1.update();
-    document.querySelector("#premsp").textContent = "Dashboard";
-    document.getElementById("cat").textContent = "Category";
-}
-
-// ===============================
-// 6️⃣ Initialisation de la langue
-// ===============================
+// Charger la langue depuis localStorage
 const savedLang = localStorage.getItem("lang") || "fr";
-selectLang.value = savedLang;
 if (savedLang === "fr") french(); else english();
+selectLang.value = savedLang === "fr" ? "French" : "English";
 
-// Changement de langue par l'utilisateur
+// Changement de langue
 selectLang.addEventListener("change", () => {
     const val = selectLang.value;
-    if (val === "fr") { 
-        french(); 
-        localStorage.setItem("lang", "fr"); 
-    } else { 
-        english(); 
-        localStorage.setItem("lang", "en"); 
-    }
+    if (val === "French") { french(); localStorage.setItem("lang", "fr"); }
+    else { english(); localStorage.setItem("lang", "en"); }
 });
 
+function totale_Sub(){
+    let a = JSON.parse(localStorage.getItem("users"))
+
+    document.getElementById("RG").innerHTML=a.length
+}
+totale_Sub()

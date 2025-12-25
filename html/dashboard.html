@@ -11,6 +11,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        .chart-container {
+    height: 320px;   /* same height for all charts */
+}
+
         body {
             background-color: #ffffff; /* fond blanc général */
         }
@@ -92,8 +96,8 @@
         <div class="ms-auto d-flex align-items-center">
             <div id="role" style="margin-right: 12px;"></div>
             <select id="select" class="form-select me-3" style="width:150px;">
-                <option value="fr">French</option>
-                <option value="en">English</option>
+                <option value="French">French</option>
+                <option value="English">English</option>
             </select>
             <button class="btn btn-danger" id="deco">Se deconnecter</button>
         </div>
@@ -103,10 +107,13 @@
     <div id="sidebar">
         <nav class="nav flex-column text-center">
             <a class="nav-link" href="#">Tableau de bord</a>
-            <a class="nav-link" href="../html/Liste_livres.html">Livres</a>
-            <a class="nav-link" id="comma" href="../html/liste_comm_client.html">Commandes</a>
-            <a class="nav-link" id="cat" href="../html/Catégorie.html">Catégories</a>
-            <a class="nav-link" id="cat" href="../html/liste_auteur.html">Listes des auteurs</a>
+            <a class="nav-link" href="Liste_livres.html">Livres</a>
+            <a class="nav-link" id="comma" href="liste_comm_client.html">Commandes</a>
+           <a class="nav-link active" href="../html/Catégorie.html"
+           data-fr="Catégories" data-en="Category">
+            Catégories
+        </a>
+        <a class="nav-link" id="#" href="../html/liste_auteur.html">Liste des auteurs</a>
         </nav>
     </div>
 
@@ -122,6 +129,7 @@
             <a id="List" href="../html/Ajout._livre_admin.html"
                class="btn btn-primary w-100" style="max-width:120px;">Ajouter livre</a>
             <a href="../html/Liste_livres.html" class="btn btn-primary w-100" style="max-width:120px;">Lister livres</a>
+            
         </div>
 
         <!-- Overview -->
@@ -137,21 +145,34 @@
                     <p class="fs-4 fw-bold" id="NOB">0</p>
                 </div>
                 <div class="col-md-4">
-                    <h5 class="section-title">Croissance du chiffre d'affaires</h5>
+                    <h5 class="section-title">Nombre total d'abonnés</h5>
                     <p class="fs-4 fw-bold" id="RG">0</p>
                 </div>
             </div>
         </div>
 
         <!-- Charts -->
-        <div class="row g-3">
-            <div class="col-md-6 bg-white rounded shadow-sm p-3">
-                <canvas id="dia1"></canvas>
-            </div>
-            <div class="col-md-6 bg-white rounded shadow-sm p-3">
-                <canvas id="dia2"></canvas>
-            </div>
+      <div class="row g-3">
+    <div class="col-md-6">
+        <div class="chart-container bg-white rounded shadow-sm p-3">
+            <canvas id="dia1"></canvas>
         </div>
+    </div>
+
+  <div class="col-md-6">
+    <div class="chart-container bg-white rounded shadow-sm p-3 d-flex align-items-center justify-content-center">
+        <canvas id="dia2"></canvas>
+    </div>
+</div>
+
+
+    <div class="col-md-6">
+        <div class="chart-container bg-white rounded shadow-sm p-3">
+            <canvas id="dia3"></canvas>
+        </div>
+    </div>
+</div>
+
     </div>
 
     <!-- Script -->
