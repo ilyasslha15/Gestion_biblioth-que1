@@ -1,7 +1,7 @@
 // =============================
 // 1 - Initialisation des utilisateurs
 // =============================
-let users = JSON.parse(localStorage.getItem("users"));
+let users = JSON.parse(localStorage.getItem("users"));//récupérer users
 if (!users) {
     users = [
         { email: 'admin@app.com', password: 'admin123', role: 'admin' },
@@ -58,7 +58,7 @@ function appliquerLangue(code) {
     document.getElementById("btnSignIn").textContent = t.signInBtn;
 
     // Texte lien "Déjà un compte ?"
-    document.getElementById("loginText").childNodes[0].textContent = t.alreadyAccount + " ";
+    document.getElementById("loginText").childNodes[0].textContent = t.alreadyAccount + " ";//<span></span>
     document.getElementById("loginLink").textContent = t.loginHere;
 
     // Réinitialiser le message d'erreur
@@ -88,7 +88,7 @@ const registerForm = document.getElementById("loginForm");
 const errorMsg = document.getElementById("errorMsg");
 
 registerForm.addEventListener("submit", function(e) {
-    e.preventDefault();
+    e.preventDefault();//éviter de recharger la page
 
     // Récupérer les valeurs saisies
     const email = document.getElementById("email").value.trim();
@@ -101,7 +101,7 @@ registerForm.addEventListener("submit", function(e) {
         const newUser = { email, password, role };
 
         // Ajouter le nouvel utilisateur et mettre à jour le localStorage
-        users.push(newUser);
+        users.push(newUser);//ajouter un nouveau user
         localStorage.setItem("users", JSON.stringify(users));
         localStorage.setItem("currentUser", JSON.stringify(newUser));
 

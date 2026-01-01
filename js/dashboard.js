@@ -1,5 +1,5 @@
 // ===============================
-// 1️⃣ Vérification utilisateur connecté
+// 1 - érification utilisateur connecté
 // ===============================
 let user = JSON.parse(localStorage.getItem("currentUser"));
 if (!user) {
@@ -8,10 +8,10 @@ if (!user) {
 
 
 // ===============================
-// 2️⃣ Gestion du rôle utilisateur et affichage
+// 2 - Gestion du rôle utilisateur et affichage
 // ===============================
 const roleDiv = document.getElementById("role");
-roleDiv.textContent = user.email;
+roleDiv.textContent = user.email;// en haut a coté du selecteur du langue
 
 // Bouton ajouter livre pour admin uniquement
 const addBookBtn = document.querySelector("#List");
@@ -30,25 +30,24 @@ nameDiv.appendChild(welcomeMsg);
 
 
 // authors
-
- 
-    let au = JSON.parse(localStorage.getItem("books"));
-    let VAR = [];
-au.forEach(elm => {
-    if(!VAR[elm.author]){
-        VAR[elm.author]=1;
-    }else{
-        VAR[elm.author] +=1;
+const au = JSON.parse(localStorage.getItem('books') || '[]'); // récupération des livres (fallback)
+let VAR = {}; // dictionnaire des comptes par auteur
+au.forEach(elm =>{ // Parcourir le tableau des livres
+    const author = elm.author;
+    if (!VAR[author]) {
+        VAR[author] = 1;
+    }else {
+        VAR[author] += 1;
     }
 });
- const Sort_A = Object.keys(VAR).sort((a,b)=> VAR[b] - VAR[a])
-console.log(Sort_A);
+const Sort_A = Object.keys(VAR).sort((a, b) => VAR[b] - VAR[a]);
 
 
 // ===============================
-// 3️⃣ Graphiques et statistiques
+// 3 - Graphiques et statistiques
 // ===============================
 const orders = JSON.parse(localStorage.getItem("orders"))||[];
+//les graphiques : 
 const dia1 = document.getElementById("dia1");
 const dia2 = document.getElementById("dia2");
 const dia3 = document.getElementById("dia3");
@@ -56,21 +55,21 @@ const dia3 = document.getElementById("dia3");
 let hor = 0, adv = 0, act = 0;
 let chart2, char1;
 
+
+// Types
 const Livres = JSON.parse(localStorage.getItem("books")) || [];
+let counts = {}; // objet vide pour compter
 Livres.forEach(book => {
-    if (book.type === "horror") hor++;
-    if (book.type === "adventure") adv++;
-    if (book.type === "action") act++;
-});
-const counts = Livres.reduce((acc,book)=>{
-    if(acc[book.type]){
-        acc[book.type]+=1;
-    }else{
-        acc[book.type]=1;
+    if (counts[book.type]) {
+        counts[book.type] += 1; // si le type existe déjà, on incrémente
+    } else {
+        counts[book.type] = 1; // sinon on initialise à 1
     }
-    return acc;
-},{})
- const Sort_T = Object.keys(counts).sort((a,b)=> counts[b] - counts[a])
+});
+// Trier les types par nombre de livres
+const Sort_T = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+
+ //users
  let ord_T = {}
 orders.forEach(elm => {
     if(ord_T[elm.user]){
@@ -79,16 +78,15 @@ orders.forEach(elm => {
        ord_T[elm.user]=1 
     }
  });
-const ord_key = Object.keys(ord_T)
-const ord_value = Object.values(ord_T)
-
+   const ord_T1 = Object.keys(ord_T).sort((a,b)=>ord_T[b]-ord_T[a]);
+   
 // ----- Diagramme circulaire -----
 chart2 = new Chart(dia2, {
     type: 'doughnut',
     data: {
-        labels: [ord_key[0], ord_key[1],ord_key[2]],
+        labels: [ord_T1[0], ord_T1[1],ord_T1[2]],
         datasets: [{
-            data: [ord_value[0], ord_value[1], ord_value[2]],
+            data: [ord_T[ord_T1[0]], ord_T[ord_T1[1]], ord_T[ord_T1[2]]],
             backgroundColor: ['#4e73df', '#1cc88a', '#f6c23e'],
         }]
     },
@@ -103,10 +101,11 @@ chart2 = new Chart(dia2, {
 
 // ----- Diagramme en barres -----
 char1 = new Chart(dia1, {
-    type: 'bar',
-    data: {
+    type: 'bar', //type de graphique
+    data: { // Les données à afficher
         labels: [Sort_T[0], Sort_T[1], Sort_T[2]],
-        datasets: [{
+        datasets: [
+        {
             data: [counts[Sort_T[0]],counts[Sort_T[1]], counts[Sort_T[2]]],
             backgroundColor: '#4e73df'
         }]
@@ -137,7 +136,7 @@ if (user.role === "admin") {
 }
 
 // ===============================
-// 4️⃣ Déconnexion
+// 4 -  Déconnexion
 // ===============================
 document.getElementById("deco").addEventListener("click", () => {
     localStorage.removeItem("currentUser");
@@ -145,13 +144,13 @@ document.getElementById("deco").addEventListener("click", () => {
 });
 
 // ===============================
-// 5️⃣ Traduction dynamique
+// 5 - Traduction dynamique
 // ===============================
 const selectLang = document.getElementById("select");
 
 function french() {
     // Traduction textes
-    document.querySelector("button").textContent = "Déconnecté";
+    document.querySelector("button").textContent = "Déconexion";
     addWelcomeText("Bienvenue");
 
     updateLinksTextFR();
@@ -159,10 +158,9 @@ function french() {
 
     // Graphiques
     chart2.options.plugins.title.text = "Top 3 des clients";
-    chart2.data.datasets[0].label = "Apercu";
     chart2.update();
 
-    char1.data.datasets[0].label = "Top 3 catagorie";
+    char1.data.datasets[0].label = "Top 3 catagories";
     char1.update();
      char3.data.datasets[0].label = "Top 3 des Authors";
     char3.update();
@@ -183,7 +181,7 @@ function english() {
     chart2.data.datasets[0].label = "OverView";
     chart2.update();
 
-    char1.data.datasets[0].label = "Income";
+    char1.data.datasets[0].label = "Top 3 categorys";
     char1.update();
  char3.data.datasets[0].label = "Top 3 Author";
     char3.update();
@@ -251,4 +249,4 @@ function totale_Sub(){
 
     document.getElementById("RG").innerHTML=a.length
 }
-totale_Sub()
+totale_Sub();

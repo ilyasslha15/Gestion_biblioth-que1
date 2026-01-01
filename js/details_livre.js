@@ -1,5 +1,5 @@
 // ===============================
-// 0️⃣ Gestion utilisateur
+// 0 - Gestion utilisateur
 // ===============================
 let user = JSON.parse(localStorage.getItem("currentUser"));
 if (!user) {
@@ -19,7 +19,7 @@ document.getElementById("deco").addEventListener("click", () => {
 });
 
 // ===============================
-// 1️⃣ Traduction FR/EN
+// 1 - Traduction FR/EN
 // ===============================
 let currentLang = localStorage.getItem("lang") || "fr";//langue par défaut
 const selectLang = document.getElementById("select");
@@ -75,10 +75,10 @@ function translatePage() {
 translatePage();
 
 // ===============================
-// 2️⃣ Récupérer le livre depuis l’URL
+// 2 - Récupérer le livre depuis l’URL
 // ===============================
 const params = new URLSearchParams(window.location.search);//prends ce qu’il y a après ? dans l’URL le mets dans params
-const titleParam = decodeURIComponent(params.get("title") || ""); // Récupère le paramètre 'title'
+const titleParam = decodeURIComponent(params.get("title") || "");// Récupère le paramètre 'title'
 // decodeURIComponent ----> sert à transformer un texte encodé dans une URL en texte normal.
 
 if (!titleParam) {
@@ -96,7 +96,7 @@ if (!book) {
 }
 
 // ===============================
-// 3️⃣ Afficher les détails du livre
+// 3 -  Afficher les détails du livre
 // ===============================
 document.getElementById("det_title").textContent = book.title;
 document.getElementById("det_author").textContent = book.author;
@@ -105,7 +105,7 @@ document.getElementById("det_type").textContent = book.type;
 document.getElementById("det_price").textContent = book.prix;
 
 // ===============================
-// 4️⃣ Bouton Modifier selon rôle
+// 4 -  Bouton Modifier selon rôle
 // ===============================
 if (user.role !== "admin") {
     document.getElementById("btnEdit").style.display = "none";
@@ -115,7 +115,7 @@ if (user.role !== "admin") {
 }
 
 // ===============================
-// 5️⃣ Export PDF
+// 5 - Export PDF
 // ===============================
 function generatePDF() {
     const printContents = document.getElementById("pdf").innerHTML;//récupère le contenu de la div pdf

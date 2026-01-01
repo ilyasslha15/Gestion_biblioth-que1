@@ -75,11 +75,11 @@ const users = JSON.parse(localStorage.getItem("users") || "[]");
 // 8 - Gestion du formulaire de connexion
 // =============================
 loginForm.addEventListener("submit", function(e) {
-    e.preventDefault();
+    e.preventDefault();//éviter de recharger la page
 
     // Récupérer les valeurs saisies
-    const email = emailEl.value.trim();
-    const password = passwordEl.value.trim();
+    const email = emailEl.value.trim();//sans espaces
+    const password = passwordEl.value.trim();//sans espace
 
     // Vérifier si l'utilisateur existe
     const user = users.find(u => u.email === email && u.password === password);

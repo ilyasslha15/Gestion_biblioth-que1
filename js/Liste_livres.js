@@ -4,7 +4,7 @@ let books = JSON.parse(localStorage.getItem("books")) || [];
 let user = JSON.parse(localStorage.getItem("currentUser"));
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-let tab_type = [...new Set(books.map(b => b.type))];// Récupérer les types uniques des livres
+let tab_type = [...new Set(books.map(b => b.type))];// Récupérer les types uniques des livres sans répétition
 let selecteur = document.getElementById("typeFilter");// Sélecteur de type
 
 tab_type.forEach(type => {// Ajouter les options de type au sélecteur
@@ -27,7 +27,7 @@ document.getElementById("role").innerHTML = user.email;
 const tbody = document.querySelector("#table2 tbody");
 const selecteur_type = document.getElementById("typeFilter");
 
-// 🔹 Fonction pour vérifier si un livre est déjà emprunté
+//  Fonction pour vérifier si un livre est déjà emprunté
 function isBookBorrowed(title) {
     return orders.some(o =>
         o.status === "active" &&
@@ -107,7 +107,7 @@ function afficher_livres(list = books) {
             td3.appendChild(but);
         }
 
-        td3.appendChild(but2);
+        td3.appendChild(but2);//détails
 
         tr.appendChild(td1);
         tr.appendChild(td2);

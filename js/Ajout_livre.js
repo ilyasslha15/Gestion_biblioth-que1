@@ -1,5 +1,5 @@
 // ===============================
-// 0️⃣ Traduction de la page
+// 0 -  Traduction de la page
 // ===============================
 let currentLang = 'French'; // Langue par défaut
 const selectLang = document.getElementById("select");
@@ -39,7 +39,7 @@ function translatePage() {
 }
 
 // ===============================
-// 1️⃣ Gestion utilisateur
+// 1 -  Gestion utilisateur
 // ===============================
 let user = JSON.parse(localStorage.getItem("currentUser"));
 if (!user) window.location.href = "../login/login.html";
@@ -62,7 +62,7 @@ selectLang.value = currentLang;
 translatePage();
 
 // ===============================
-// 2️⃣ Sélection des champs et messages
+// 2 -  Sélection des champs et messages
 // ===============================
 const title = document.getElementById('title');
 const author = document.getElementById('author');
@@ -78,7 +78,7 @@ const errPrix = document.getElementById('errprix');
 const confirmation = document.getElementById('confirmation');
 
 // ===============================
-// 3️⃣ Validation en temps réel
+// 3 -  Validation en temps réel
 // ===============================
 title.addEventListener('input', () => {
     errTitle.textContent = title.value.trim() ? '' : currentLang === 'French' ? 'Le titre est obligatoire' : 'Title is required';
@@ -97,7 +97,7 @@ prix.addEventListener('input', () => {
 });
 
 // ===============================
-// 4️⃣ Soumission du formulaire
+// 4 - Soumission du formulaire
 // ===============================
 form.addEventListener('submit', e => {
     e.preventDefault();
