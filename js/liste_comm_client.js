@@ -45,7 +45,7 @@ function displayUserOrders() {
 
     let ordersHTML = `<h3>${translate('myOrders')}</h3>`;//titre des commandes
     userOrders.forEach((order, index) => {//parcourir chaque commande
-        const orderDate = new Date(order.date).toLocaleString(//creer une date lisible
+        const orderDate = new Date(order.date).toLocaleString(// transforme la date de la commande en texte lisible (date + heure)
             getCurrentLanguage() === 'fr' ? 'fr-FR' : 'en-US'
         );
 
@@ -76,7 +76,6 @@ function changeLanguage(lang) {
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', () => {//quand le document est chargé
-    const langSelector = document.getElementById('langSelector');//sélecteur de langue
     const savedLang = getCurrentLanguage();//récupérer la langue sauvegardée
     langSelector.value = savedLang;
 

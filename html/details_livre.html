@@ -54,22 +54,6 @@
         .btn-space {
             margin-right: 10px;
         }
-    @media print {
-    body * {
-        visibility: hidden;
-    }
-    #show * {
-        visibility: visible;
-    }
-    #btn{
-        display: none;
-    }
-    #show {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-}
     </style>
 </head>
 
@@ -130,7 +114,7 @@
                 <div id="btn" class="d-flex justify-content-between mt-3">
                     <button class="btn btn-secondary btn-space" id="btnPDF"  onclick="generatePDF()">Exporter PDF</button>
                     <a id="btnEdit" class="btn btn-warning text-white" href="Modifier_livre.html">Modifier</a>
-                    <a href="Liste_livres.html" class="btn btn-primary">Retour</a>
+                    <a href="Liste_livres.html" id="retour" class="btn btn-primary">Retour</a>
                 </div>
             </div>
         </div>

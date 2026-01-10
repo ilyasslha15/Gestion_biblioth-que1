@@ -13,10 +13,11 @@ selectLang.addEventListener('change', () => {
 function translatePage() {
     // Navbar
     document.getElementById("deco").textContent = currentLang === 'French' ? "Déconnexion" : "Logout";
-    document.querySelector("span.navbar-brand").textContent = currentLang === 'French' ? "Livre" : "Book";
+    document.getElementById("title").textContent = currentLang === 'French' ? "Livre" : "Book";
 
     // Sidebar
     const links = document.querySelectorAll("#sidebar .nav-link");
+    //renvoie une liste (NodeList) de tous les éléments correspondants.
     links[0].textContent = currentLang === 'French' ? "Tableau de bord" : "Dashboard";
     links[1].textContent = currentLang === 'French' ? "Livres" : "Books";
     links[2].textContent = currentLang === 'French' ? "Commandes" : "Orders";
@@ -25,7 +26,7 @@ function translatePage() {
 
     // Titre page
     document.querySelector("#content h2").textContent = currentLang === 'French' ? "Ajouter un livre" : "Add Book";
-
+    //première h2 a l'intérieure h2
     // Labels formulaire
     document.querySelector("label[for='title']").textContent = currentLang === 'French' ? "Titre" : "Title";
     document.querySelector("label[for='author']").textContent = currentLang === 'French' ? "Auteur" : "Author";
@@ -46,11 +47,6 @@ if (!user) window.location.href = "../login/login.html";
 
 document.getElementById("role").textContent = user.email;
 
-// Déconnexion
-document.getElementById("deco").addEventListener("click", () => {
-    localStorage.removeItem("currentUser");
-    window.location.href = "../login/login.html";
-});
 if(user.role === "admin") {
     document.getElementById("comma").href = "../html/list_comm_admin.html";
 }   

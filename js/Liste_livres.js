@@ -178,7 +178,7 @@ if (user.role === "user") {
             items: Panier_actuel,
             total: Panier_actuel.reduce((s, i) => s + Number(i.price), 0),
             status: "active",
-            date: new Date().toISOString()
+            date: new Date().toISOString()//toISOString() → transforme une date en texte universel standard pour être sûr qu’elle sera comprise partout.
         });
 
         localStorage.setItem("orders", JSON.stringify(orders));

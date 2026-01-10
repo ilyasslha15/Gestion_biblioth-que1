@@ -1,54 +1,70 @@
 /****************************************
  * Gestion utilisateur
  ****************************************/
-let currentUser = JSON.parse(localStorage.getItem("currentUser"));//récupérer l'utilisateur connecté
-if(!currentUser) window.location.href = "../html/login.html";//rediriger si pas connecté
-document.getElementById("role").innerText = currentUser.email;//afficher l'email de l'utilisateur connecté
+// Récupérer l'utilisateur connecté
+let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+if (!currentUser) window.location.href = "../html/login.html"; // redirection si non connecté
+
+// Afficher l'email de l'utilisateur dans la navbar
+document.getElementById("role").innerText = currentUser.email;
 
 // Déconnexion
-document.getElementById("deco").addEventListener("click", () => {//ajout gestion de deconexion
-    localStorage.removeItem("currentUser");//supprimer l'utilisateur connecté
-    window.location.href = "../html/login.html";//rediriger vers la page de login
-}); // gestion de deconexion
+document.getElementById("deco").addEventListener("click", () => {
+    localStorage.removeItem("currentUser"); // supprimer l'utilisateur connecté
+    window.location.href = "../html/login.html"; // redirection vers la page login
+});
+
 
 /****************************************
  * Traduction FR/EN
  ****************************************/
-let currentLang = localStorage.getItem("lang") || "fr";//langue courante
-const langSelector = document.getElementById("langSelector");//sélecteur de langue
-langSelector.value = currentLang;//mettre à jour le sélecteur avec la langue courante
+let currentLang = localStorage.getItem("lang") || "fr"; // langue courante
+const langSelector = document.getElementById("langSelector");
+langSelector.value = currentLang;
 
-
+// Fonction pour traduire la page
 function translatePage() {
-    // Navbar & Sidebar
-    document.querySelectorAll("[data-fr]").forEach(el => {//sélectionner tous les éléments avec les attributs data-fr et data-en
-        const fr = el.getAttribute("data-fr");//récupérer le texte en français
-        const en = el.getAttribute("data-en");//récupérer le texte en anglais
-        el.innerText = currentLang === "fr" ? fr : en;//mettre à jour le texte en fonction de la langue courante
+    // Traduire tous les éléments avec data-fr / data-en
+    document.querySelectorAll("[data-fr]").forEach(el => {
+        const fr = el.getAttribute("data-fr");
+        const en = el.getAttribute("data-en");
+        el.innerText = currentLang === "fr" ? fr : en;
     });
 
-    // Placeholder
-    document.getElementById("searchTitle").placeholder = currentLang === "fr" ? "Email du client" : "Client email";//mettre à jour le placeholder du champ de recherche
-    localStorage.setItem("lang", currentLang);//sauvegarder la langue courante
+    // Mettre à jour le placeholder du champ de recherche
+    document.getElementById("searchTitle").placeholder = currentLang === "fr" ? "Email du client" : "Client email";
+
+    // Sauvegarder la langue sélectionnée
+    localStorage.setItem("lang", currentLang);
 }
+
+// Traduction initiale
 translatePage();
-langSelector.addEventListener("change", () => {//écouteur d'événement pour le changement de langue
-    currentLang = langSelector.value;//mettre à jour la langue courante
-    translatePage();//traduire la page
+
+// Changement de langue
+langSelector.addEventListener("change", () => {
+    currentLang = langSelector.value;
+    translatePage();
 });
+
 
 /****************************************
  * Chargement des commandes
  ****************************************/
-let orders = JSON.parse(localStorage.getItem("orders")) || []; //on récupère la liste des commandes
-if(orders.length === 0) {
-   document.getElementById("titles").style.display = "none";
-document.getElementById("ligne_info").style.display = "none";
-  document.getElementById("res").innerText = currentLang === "fr" ? "Aucune commande disponible." : "No orders available.";
-}
-const tbody = document.querySelector("#table2 tbody"); //le tbody ou on va afficher les commandes
-
 function AllOrders(userEmail = null) {
+
+    // Récupérer les commandes depuis localStorage
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    // Gestion du cas où aucune commande n'existe
+    if (orders.length === 0) {
+        document.getElementById("titles").style.display = "none";
+        document.getElementById("ligne_info").style.display = "none";
+        document.getElementById("res").innerText = currentLang === "fr" ? "Aucune commande disponible." : "No orders available.";
+        return;
+    }
+
+    // Préparer le tableau
     const tbody = document.querySelector("#table2 tbody");
     tbody.innerHTML = ""; // vider le tableau
     const test10Div = document.getElementById("test10");
@@ -61,24 +77,12 @@ function AllOrders(userEmail = null) {
         filteredOrders = orders.filter(o => o.user === userEmail);
     }
 
-    // Vérifier s’il y a des commandes
-    const hasOrders = filteredOrders.some(o => o.items && o.items.length > 0);
-
-    if (!hasOrders) {
-        // Masquer le filtre et le tableau
-        test10Div.style.display = "none";
-        ligneInfo.style.display = "none";
-        resMessage.innerText = currentLang === "fr" ? 
-            "Aucune commande disponible." : "No orders available.";
-        return;
-    }
-
-    // Sinon afficher le filtre et le tableau
+    // Afficher le filtre et le tableau
     test10Div.style.display = "block";
     ligneInfo.style.display = "table-header-group";
     resMessage.innerText = "";
 
-    // Afficher les commandes
+    // Boucler sur les commandes et afficher chaque item
     filteredOrders.forEach(order => {
         order.items.forEach(item => {
             let tr = document.createElement("tr");
@@ -111,17 +115,16 @@ function AllOrders(userEmail = null) {
 }
 
 
-
 /****************************************
  * Export d’une commande
  ****************************************/
 function Export_Comm(id) {
     // Séparer l'email (dernier mot) et le titre (tout le reste)
     const parts = id.split(" ");
-    const email = parts.pop();          // dernier mot = email
-    const title = parts.join(" ");      // le reste = titre
+    const email = parts.pop();
+    const title = parts.join(" ");
 
-    // Récupérer les données depuis localStorage
+    // Récupérer livres et utilisateurs
     const books = JSON.parse(localStorage.getItem("books")) || [];
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
@@ -145,14 +148,14 @@ Year : ${book.year}
 Type : ${book.type}
 Prix : ${book.prix}`;
 
-    // Créer le fichier en mémoire et lancer le téléchargement
-    const blob = new Blob([text], { type: "text/plain" });//créer un blob avec le contenu texte
-    const url = URL.createObjectURL(blob);//créer une URL pour le blob
+    // Créer un fichier texte et lancer le téléchargement
+    const blob = new Blob([text], { type: "text/plain" });//un fichier virtuel en mémoire dans le navigateur.
+    const url = URL.createObjectURL(blob);//crée un lien temporaire vers le fichier en mémoire.
 
-    const a = document.createElement("a");//créer un élément <a>
-    a.href = url;//définir l'URL du blob comme href
-    a.download = `${client.email}.txt`;//définir le nom du fichier à télécharger
-    a.click();//simuler un clic pour lancer le téléchargement/l’utilisateur n’a pas besoin de cliquer lui-même.
+    const a = document.createElement("a");
+    a.href = url;//// on met le lien vers le fichier
+    a.download = `${client.email}.txt`;// // nom du fichier à télécharger
+    a.click();// simule un clic pour lancer le téléchargement
 
     URL.revokeObjectURL(url); // libérer la mémoire
 }
@@ -164,7 +167,7 @@ Prix : ${book.prix}`;
 document.getElementById("searchTitle").addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         const value = e.target.value.trim();
-        const found = orders.find(o => o.user === value);
+        const found = JSON.parse(localStorage.getItem("orders") || "[]").find(o => o.user === value);
 
         if (!found) {
             document.getElementById("error").innerText =
@@ -176,6 +179,7 @@ document.getElementById("searchTitle").addEventListener("keydown", (e) => {
         }
     }
 });
+
 
 /****************************************
  * Chargement initial

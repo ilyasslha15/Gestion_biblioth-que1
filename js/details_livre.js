@@ -34,11 +34,11 @@ selectLang.addEventListener('change', () => {
 function translatePage() {
     // Navbar
     document.querySelector(".navbar-brand").textContent = currentLang === 'fr' ? "Détailes" : "Details";
-    document.querySelector("#sidebar .nav-link:nth-child(1)").textContent = currentLang === 'fr' ? "Tableau de bord" : "Dashboard";
-    document.querySelector("#sidebar .nav-link:nth-child(2)").textContent = currentLang === 'fr' ? "Livres" : "Books";
-    document.querySelector("#sidebar .nav-link:nth-child(3)").textContent = currentLang === 'fr' ? "Commandes" : "Orders";
-   document.querySelector("#sidebar .nav-link:nth-child(4)").textContent = currentLang === 'fr' ? "Catégories" : "Category";
-    document.querySelector("#sidebar .nav-link:nth-child(5)").textContent = currentLang === 'fr' ? "Listes des auteurs" : "Authors list";
+    document.querySelectorAll(".nav-link")[0].textContent = currentLang === 'fr' ? "Tableau de bord" : "Dashboard";
+    document.querySelectorAll(".nav-link")[1].textContent = currentLang === 'fr' ? "Livres" : "Books";
+    document.querySelectorAll(".nav-link")[2].textContent = currentLang === 'fr' ? "Commandes" : "Orders";
+   document.querySelectorAll(".nav-link")[3].textContent = currentLang === 'fr' ? "Catégories" : "Category";
+    document.querySelectorAll(".nav-link")[4].textContent = currentLang === 'fr' ? "Listes des auteurs" : "Authors list";
 
    // Titre page
     document.querySelector("h2").textContent = currentLang === 'fr' ? "📘 Détails du livre" : "📘 Book Details";
@@ -53,7 +53,7 @@ function translatePage() {
         labels[4].textContent = "Prix : ";
         document.getElementById("btnPDF").textContent = "Exporter PDF";
         document.getElementById("btnEdit").textContent = "Modifier";
-        document.querySelector("#main a.btn-primary").textContent = "Retour"; 
+        document.getElementById("retour").textContent = "Retour"; 
         document.getElementById("deco").innerHTML="Deconexion";
 
     } else {
@@ -64,7 +64,7 @@ function translatePage() {
         labels[4].textContent = "Price : ";
         document.getElementById("btnPDF").textContent = "Export PDF";
         document.getElementById("btnEdit").textContent = "Edit";
-        document.querySelector("#main a.btn-primary").textContent = "Back";
+        document.getElementById("retour").textContent = "Back";
          document.getElementById("deco").innerHTML="Logout";
 
     }
@@ -77,9 +77,9 @@ translatePage();
 // ===============================
 // 2 - Récupérer le livre depuis l’URL
 // ===============================
-const params = new URLSearchParams(window.location.search);//prends ce qu’il y a après ? dans l’URL le mets dans params
-const titleParam = decodeURIComponent(params.get("title") || "");// Récupère le paramètre 'title'
-// decodeURIComponent ----> sert à transformer un texte encodé dans une URL en texte normal.
+const params = new URLSearchParams(window.location.search);//prends ce qu’il y a après ? et le transforme en objet
+const titleParam = decodeURIComponent(params.get("title") || "");// Récupère le paramètre 'title' d'après l'objet
+//param c'est un objet
 
 if (!titleParam) {
     alert(currentLang === 'fr' ? "Aucun titre fourni !" : "No title provided!");
@@ -121,6 +121,5 @@ function generatePDF() {
     const printContents = document.getElementById("pdf").innerHTML;//récupère le contenu de la div pdf
     const printWindow = window.open('', '', 'height=100,width=300');//ouvre une nouvelle fenêtre
     printWindow.document.write(printContents);//écrit le contenu dans la nouvelle fenêtre
-    printWindow.document.close();//ferme le document pour que le navigateur sache que tout le contenu est chargé
-    printWindow.print();//lance l'impression
+    printWindow.print();//la barre ou il ya l'outil d'impression
 }

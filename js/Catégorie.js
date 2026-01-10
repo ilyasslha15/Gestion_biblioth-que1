@@ -27,7 +27,7 @@ function saveBooks() {
 }
 
 function getCategories() {
-    return [...new Set(books.map(b => b.type))];//Récupérer les catégories uniques des livres
+    return [...new Set(books.map(b => b.type))];//récupérer tous les types de livres SANS doublons
 }
 
 // ===============================
